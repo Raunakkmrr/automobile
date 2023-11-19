@@ -1,0 +1,123 @@
+import { Button } from "@/components/ui/button";
+import { RootState } from "@/context/store";
+import BackgroundFilter from "@/features/filter-panel/background.component";
+import NumberPlate from "@/features/filter-panel/number-plate.component";
+import Window from "@/features/filter-panel/window.component";
+import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import MagicWandIcon from "/src/assets/icons/magic-wand.svg";
+import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
+
+const FiltersPage = () => {
+  const { mainFile, filters, selectedImage } = useSelector(
+    (state: RootState) => state.filters
+  );
+  const location = useLocation();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const processImageHandler = () => {
+    const formData = new FormData();
+
+    formData.append("image_file", selectedImage ? selectedImage : "");
+    formData.append("image_url", filters.image_url ? filters.image_url : "");
+    formData.append("bg_id", filters.bg_id ? filters.bg_id : "");
+    formData.append(
+      "window_refinement",
+      filters.window_refinement ? JSON.stringify(filters.window_refinement) : ""
+    );
+    formData.append("interior_regeneration", "1");
+    formData.append(
+      "number_plate",
+      filters.number_plate ? filters.number_plate : ""
+    );
+    formData.append(
+      "extension",
+      mainFile ? "." + mainFile.path.split(".").pop() : ""
+    );
+
+    axios
+      .post("https://api.carromm.com/automobile/background/replace", formData, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+          Authorization: "510700f6-15eb-4f37-8270-a856c6caf101",
+        },
+      })
+      .then((response: any) => {
+        toast({ description: "Successfully processed request" });
+        navigate("/download", { state: { skuID: response.skuID } });
+      })
+      .catch(() =>
+        toast({
+          description: "Not able to process image at this moment",
+          variant: "destructive",
+        })
+      );
+  };
+
+  if (!selectedImage || Object.keys(selectedImage).length === 0)
+    return (
+      <>
+        <section className="my-20 text-center">
+          <h1 className="mb-5 text-2xl font-bold text-center">
+            No image selected please go to home page and select an image
+          </h1>
+
+          <Button onClick={() => navigate("/")}>Home</Button>
+        </section>
+      </>
+    );
+
+  return (
+    <section className="grid min-h-screen grid-cols-1 sm:grid-cols-5 bg-gray-50">
+      <div className="col-span-1 px-5 py-3 border-none">
+        {location.pathname.toLowerCase().includes("windows") && <Window />}
+        {location.pathname.toLowerCase().includes("backgrounds") && (
+          <BackgroundFilter />
+        )}
+        {location.pathname.toLowerCase().includes("number-plate") && (
+          <NumberPlate />
+        )}
+      </div>
+      <main className="flex flex-col items-center flex-1 min-w-full min-h-full col-span-4 gap-10 py-5 sm:col-span-4 bg-grap-50">
+        <div className="w-6/12 px-2 py-3 bg-purple-100 rounded-lg h-4/12">
+          <div className="p-5 bg-white border rounded-md">
+            <img
+              className="w-full h-full"
+              src={selectedImage}
+              alt="uploaded image"
+            />
+          </div>
+        </div>
+
+        {location.pathname.toLowerCase().includes("windows") && (
+          <div className="relative flex items-center w-6/12 px-2 py-4 bg-white border max-sm:gap-3 max-sm:flex-wrap sm:justify-around rounded-3xl">
+            <p className="absolute -top-[15px] left-8 font-bold z-auto">
+              Category
+            </p>
+            <div className="font-semibold">
+              BG: <span className="font-normal">Name_1</span>
+            </div>
+            <div className="font-semibold">
+              Window: <span className="font-normal">custom_tint</span>
+            </div>
+            <div className="font-semibold">
+              Number Plate: <span className="font-normal">Not selected</span>
+            </div>
+          </div>
+        )}
+
+        <Button
+          onClick={processImageHandler}
+          className="flex items-center gap-1 bg-blue-600"
+        >
+          <img src={MagicWandIcon} alt="magic wand" /> Process Image
+        </Button>
+      </main>
+    </section>
+  );
+};
+
+export default FiltersPage;
