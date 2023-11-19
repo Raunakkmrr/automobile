@@ -1,18 +1,23 @@
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 import { RootState } from "@/context/store";
 import BackgroundFilter from "@/features/filter-panel/background.component";
 import NumberPlate from "@/features/filter-panel/number-plate.component";
 import Window from "@/features/filter-panel/window.component";
+import axios from "axios";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import MagicWandIcon from "/src/assets/icons/magic-wand.svg";
-import axios from "axios";
-import { useToast } from "@/components/ui/use-toast";
 
 const FiltersPage = () => {
-  const { mainFile, filters, selectedImage } = useSelector(
-    (state: RootState) => state.filters
-  );
+  const {
+    mainFile,
+    filters,
+    selectedImage,
+    backgroundName,
+    plateName,
+    sampleSelectedImage,
+  } = useSelector((state: RootState) => state.filters);
   const location = useLocation();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -20,8 +25,13 @@ const FiltersPage = () => {
   const processImageHandler = () => {
     const formData = new FormData();
 
-    formData.append("image_file", selectedImage ? selectedImage : "");
-    formData.append("image_url", filters.image_url ? filters.image_url : "");
+    if (!sampleSelectedImage) {
+      formData.append(
+        "image_file",
+        selectedImage ? localStorage.getItem("mainFile") : ""
+      );
+    }
+    if (sampleSelectedImage) formData.append("image_url", sampleSelectedImage);
     formData.append("bg_id", filters.bg_id ? filters.bg_id : "");
     formData.append(
       "window_refinement",
@@ -32,13 +42,19 @@ const FiltersPage = () => {
       "number_plate",
       filters.number_plate ? filters.number_plate : ""
     );
-    formData.append(
-      "extension",
-      mainFile ? "." + mainFile.path.split(".").pop() : ""
-    );
+    if (sampleSelectedImage)
+      formData.append(
+        "extension",
+        `.${
+          sampleSelectedImage.split(".")[
+            sampleSelectedImage.split(".").length - 1
+          ]
+        }`
+      );
+    else formData.append("extension", `.${mainFile}`);
 
     axios
-      .post("https://api.carromm.com/automobile/background/replace", formData, {
+      .post("/api/automobile/background/replace", formData, {
         headers: {
           Accept: "application/json",
           "Content-Type": "multipart/form-data",
@@ -57,14 +73,13 @@ const FiltersPage = () => {
       );
   };
 
-  if (!selectedImage || Object.keys(selectedImage).length === 0)
+  if (!sampleSelectedImage && !selectedImage)
     return (
       <>
         <section className="my-20 text-center">
           <h1 className="mb-5 text-2xl font-bold text-center">
             No image selected please go to home page and select an image
           </h1>
-
           <Button onClick={() => navigate("/")}>Home</Button>
         </section>
       </>
@@ -86,32 +101,29 @@ const FiltersPage = () => {
           <div className="p-5 bg-white border rounded-md">
             <img
               className="w-full h-full"
-              src={selectedImage}
+              src={sampleSelectedImage || selectedImage}
               alt="uploaded image"
             />
           </div>
         </div>
 
-        {location.pathname.toLowerCase().includes("windows") && (
-          <div className="relative flex items-center w-6/12 px-2 py-4 bg-white border max-sm:gap-3 max-sm:flex-wrap sm:justify-around rounded-3xl">
-            <p className="absolute -top-[15px] left-8 font-bold z-auto">
-              Category
-            </p>
-            <div className="font-semibold">
-              BG: <span className="font-normal">{filters?.backgroundName}</span>
-            </div>
-            <div className="font-semibold">
-              Window:{" "}
-              <span className="font-normal">
-                {filters?.window_refinement?.TRANSPARENCY}
-              </span>
-            </div>
-            <div className="font-semibold">
-              Number Plate:{" "}
-              <span className="font-normal">{filters?.plateName}</span>
-            </div>
+        <div className="relative flex items-center w-6/12 px-2 py-4 bg-white border max-sm:gap-3 max-sm:flex-wrap sm:justify-around rounded-3xl">
+          <p className="absolute -top-[15px] left-8 font-bold z-auto">
+            Category
+          </p>
+          <div className="font-semibold">
+            BG: <span className="font-normal">{backgroundName}</span>
           </div>
-        )}
+          <div className="font-semibold">
+            Window:{" "}
+            <span className="font-normal">
+              {filters?.window_refinement?.TRANSPARENCY}
+            </span>
+          </div>
+          <div className="font-semibold">
+            Number Plate: <span className="font-normal">{plateName}</span>
+          </div>
+        </div>
 
         <Button
           onClick={processImageHandler}

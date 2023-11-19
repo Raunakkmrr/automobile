@@ -1,9 +1,13 @@
+import { filterActions } from "@/context/filters-slice";
 import { RootState } from "@/context/store";
 import UploadImage from "@/features/upload-image/upload-image.component";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const { assets } = useSelector((state: RootState) => state.assets);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -18,10 +22,17 @@ const Home = () => {
           {assets?.sample_images?.length && (
             <div className="flex flex-wrap gap-5 p-1 rounded-lg">
               {assets?.sample_images?.map((item: any) => (
-                <button key={item}>
+                <button
+                  onClick={() => {
+                    dispatch(filterActions.setSelectedSampleImage(item));
+                    navigate("/backgrounds");
+                  }}
+                  key={item}
+                  className="border rounded-md h-44 w-80"
+                >
                   <img
                     src={item}
-                    alt="sample image"
+                    alt={item}
                     className="object-cover rounded-md h-44 w-80"
                   />
                 </button>

@@ -3,13 +3,13 @@ import { filterActions } from "@/context/filters-slice";
 import { useDispatch, useSelector } from "react-redux";
 
 const BackgroundFilter = () => {
-  const { backgrounds } = useSelector((state: AssetState) => state.assets);
+  const { assets } = useSelector((state: AssetState) => state.assets);
 
   const dispatch = useDispatch();
   return (
     <section className="w-full h-full px-4 py-10 bg-white border-2 rounded-lg">
       <div className="flex flex-col gap-5">
-        {backgrounds?.map((item: any) => (
+        {assets?.backgrounds?.map((item: any) => (
           <button
             onClick={() => {
               dispatch(filterActions.setBackgroundFilter(item?.id));

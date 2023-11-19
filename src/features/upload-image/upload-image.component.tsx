@@ -8,9 +8,12 @@ import UploadFileIcon from "/src/assets/icons/upload-file.svg";
 const UploadImage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const onDrop = useCallback((acceptedFiles: any[]) => {
+  const onDrop = useCallback((acceptedFiles: File[]) => {
     // Do something with the files
-    dispatch(filterActions.setMainFile(acceptedFiles[0]));
+
+    localStorage.mainFile = acceptedFiles[0];
+
+    dispatch(filterActions.setMainFile(acceptedFiles[0]?.type?.split("/")[1]));
     dispatch(
       filterActions.setSelectedImage(URL.createObjectURL(acceptedFiles[0]))
     );

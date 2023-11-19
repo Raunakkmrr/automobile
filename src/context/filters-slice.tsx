@@ -6,6 +6,7 @@ export interface FiltersState {
   selectedImage: any;
   backgroundName: string;
   plateName: string;
+  sampleSelectedImage: any;
 }
 
 const filterSlice = createSlice({
@@ -15,8 +16,13 @@ const filterSlice = createSlice({
     backgroundName: "",
     plateName: "",
     selectedImage: {},
+    sampleSelectedImage: "",
     filters: {
-      window_refinement: {},
+      window_refinement: {
+        TINT_COLOR: "",
+        TONE_ON_TONE: "",
+        ADD_GLARE: "",
+      },
       bg_id: "",
     },
   } as FiltersState,
@@ -50,6 +56,9 @@ const filterSlice = createSlice({
     },
     setPlateName(state, action: any) {
       state.plateName = action.payload;
+    },
+    setSelectedSampleImage(state, action: any) {
+      state.sampleSelectedImage = action.payload;
     },
   },
 });
