@@ -11,9 +11,10 @@ const BackgroundFilter = () => {
       <div className="flex flex-col gap-5">
         {backgrounds?.map((item: any) => (
           <button
-            onClick={() =>
-              dispatch(filterActions.setBackgroundFilter(item?.id))
-            }
+            onClick={() => {
+              dispatch(filterActions.setBackgroundFilter(item?.id));
+              dispatch(filterActions.setBackgroundName(item?.name));
+            }}
             className="flex items-center justify-center p-1 overflow-hidden bg-gray-100 rounded-lg"
             key={item?.id}
           >

@@ -98,13 +98,17 @@ const FiltersPage = () => {
               Category
             </p>
             <div className="font-semibold">
-              BG: <span className="font-normal">Name_1</span>
+              BG: <span className="font-normal">{filters?.backgroundName}</span>
             </div>
             <div className="font-semibold">
-              Window: <span className="font-normal">custom_tint</span>
+              Window:{" "}
+              <span className="font-normal">
+                {filters?.window_refinement?.TRANSPARENCY}
+              </span>
             </div>
             <div className="font-semibold">
-              Number Plate: <span className="font-normal">Not selected</span>
+              Number Plate:{" "}
+              <span className="font-normal">{filters?.plateName}</span>
             </div>
           </div>
         )}

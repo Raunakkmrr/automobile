@@ -4,12 +4,16 @@ export interface FiltersState {
   filters: any;
   mainFile: any;
   selectedImage: any;
+  backgroundName: string;
+  plateName: string;
 }
 
 const filterSlice = createSlice({
   name: "filters",
   initialState: {
     mainFile: {},
+    backgroundName: "",
+    plateName: "",
     selectedImage: {},
     filters: {
       window_refinement: {},
@@ -39,6 +43,13 @@ const filterSlice = createSlice({
 
     setSelectedImage(state, action: PayloadAction<any>) {
       state.selectedImage = action.payload;
+    },
+
+    setBackgroundName(state, action: any) {
+      state.backgroundName = action.payload;
+    },
+    setPlateName(state, action: any) {
+      state.plateName = action.payload;
     },
   },
 });
