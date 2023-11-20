@@ -15,10 +15,10 @@ const Window = () => {
   };
   return (
     <section className="w-full h-full px-4 py-10 bg-white border-2 rounded-lg">
-      <h4 className="font-medium">Tint color</h4>
+      {/* <h4 className="font-medium">Tint color</h4> */}
 
       <div className="flex items-center justify-around my-10">
-        <div>
+        {/* <div>
           <input
             type="color"
             value={filters?.window_refinement?.TINT_COLOR}
@@ -36,7 +36,7 @@ const Window = () => {
               );
             }}
           />
-        </div>
+        </div> */}
       </div>
 
       <h4 className="mb-5 font-medium">Tint intensity</h4>
@@ -48,7 +48,7 @@ const Window = () => {
         max={1}
         onValueChange={sliderHandler}
       />
-      <div className="flex items-center gap-2 my-8 font-semibold">
+      {/* <div className="flex items-center gap-2 my-8 font-semibold">
         <Checkbox
           checked={!!filters?.window_refinement?.TONE_ON_TONE}
           onCheckedChange={(e) =>
@@ -61,8 +61,8 @@ const Window = () => {
           }
         />{" "}
         <p>Tone on Tone</p>
-      </div>
-      <div className="flex items-center gap-2 font-semibold">
+      </div> */}
+      <div className="flex items-center gap-2 font-semibold mt-4">
         <Checkbox
           checked={!!filters?.window_refinement?.ADD_GLARE}
           onCheckedChange={(e) =>

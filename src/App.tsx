@@ -50,7 +50,7 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="download" element={<DownloadPage />} />
+          <Route path="download/:sku_id" element={<DownloadPage />} />
           <Route path="/:filters" element={<FiltersPage />} />
         </Routes>
       </div>

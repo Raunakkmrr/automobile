@@ -17,6 +17,8 @@ const UploadImage = () => {
     dispatch(
       filterActions.setSelectedImage(URL.createObjectURL(acceptedFiles[0]))
     );
+    dispatch(filterActions.setSelectedFile(acceptedFiles[0]));
+    dispatch(filterActions.removeAllFilter());
 
     navigate("/backgrounds");
   }, []);

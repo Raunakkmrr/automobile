@@ -1,22 +1,22 @@
 import { Button } from "@/components/ui/button";
-import DownloadIcon from "/src/assets/icons/upload-file.svg";
-import { useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
+import axios from "axios";
 import { DiamondIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import DownloadIcon from "/src/assets/icons/upload-file.svg";
 
 const DownloadPage = () => {
-  const { state } = useLocation();
+  const params = useParams();
   const { toast } = useToast();
   const [inputUrl, setInputUrl] = useState("");
   const [outputUrl, setOutputUrl] = useState("");
 
   useEffect(() => {
     axios
-      .get("https://api.carromm.com/automobile/background/replace", {
+      .get("/api/automobile/background/replace", {
         params: {
-          sku_id: state?.skuID || "",
+          sku_id: params?.sku_id || "",
         },
         headers: {
           Accept: "application/json",
@@ -25,8 +25,16 @@ const DownloadPage = () => {
       })
       .then((response: any) => {
         // handle success
-        setInputUrl(response?.input_url);
-        setOutputUrl(response?.output_url);
+        if (response?.data?.input_url?.endsWith(".blob")) {
+          setInputUrl(response?.data?.input_url.slice(0, -5));
+        } else {
+          setInputUrl(response?.data?.input_url);
+        }
+        if (response?.data?.output_url?.endsWith(".blob")) {
+          setOutputUrl(response?.data?.output_url.slice(0, -5));
+        } else {
+          setOutputUrl(response?.data?.output_url);
+        }
       })
       .catch(() => {
         // handle error
@@ -51,7 +59,14 @@ const DownloadPage = () => {
       <main className="flex justify-center">
         <div className="inline-flex items-center justify-center w-auto h-auto p-10 mx-auto border shadow-lg">
           <div className="relative">
+            {!inputUrl && (
+              <div className="flex items-center justify-center bg-gray-100 rounded-lg h-96 w-96">
+                <p className="text-black">No Input Image found</p>
+              </div>
+            )}
+
             <img src={inputUrl} className="h-96" />
+
             <span className="absolute top-0 left-0 p-1 text-black bg-purple-200">
               Before
             </span>
@@ -62,7 +77,12 @@ const DownloadPage = () => {
             <DiamondIcon fill="purple" color="purple" />
           </div>
           <div className="relative">
-            <img src={outputUrl} className="h-96" />
+            {!outputUrl && (
+              <div className="flex items-center justify-center bg-gray-100 rounded-lg h-96 w-96">
+                <p className="text-black">No Output Image found</p>
+              </div>
+            )}
+            {outputUrl && <img src={outputUrl} className="h-96" />}
             <span className="absolute top-0 left-0 p-1 text-black bg-purple-200">
               After
             </span>

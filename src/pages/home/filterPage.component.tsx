@@ -15,6 +15,7 @@ const FiltersPage = () => {
     filters,
     selectedImage,
     backgroundName,
+    selectedFile,
     plateName,
     sampleSelectedImage,
   } = useSelector((state: RootState) => state.filters);
@@ -25,11 +26,18 @@ const FiltersPage = () => {
   const processImageHandler = () => {
     const formData = new FormData();
 
+    if (!plateName || !filters?.bg_id) {
+      toast({
+        description: "Please select a filter first",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!sampleSelectedImage) {
-      formData.append(
-        "image_file",
-        selectedImage ? localStorage.getItem("mainFile") : ""
-      );
+      const imageFile = selectedImage ? selectedFile : null;
+
+      formData.append("image_file", imageFile);
     }
     if (sampleSelectedImage) formData.append("image_url", sampleSelectedImage);
     formData.append("bg_id", filters.bg_id ? filters.bg_id : "");
@@ -63,7 +71,7 @@ const FiltersPage = () => {
       })
       .then((response: any) => {
         toast({ description: "Successfully processed request" });
-        navigate("/download", { state: { skuID: response.skuID } });
+        navigate(`/download/${response?.data?.sku_id}`);
       })
       .catch(() =>
         toast({

@@ -7,6 +7,7 @@ export interface FiltersState {
   backgroundName: string;
   plateName: string;
   sampleSelectedImage: any;
+  selectedFile: any;
 }
 
 const filterSlice = createSlice({
@@ -17,11 +18,13 @@ const filterSlice = createSlice({
     plateName: "",
     selectedImage: {},
     sampleSelectedImage: "",
+    selectedFile: "",
     filters: {
       window_refinement: {
-        TINT_COLOR: "",
-        TONE_ON_TONE: "",
-        ADD_GLARE: "",
+        TINT_COLOR: "(166, 205, 203)",
+        TONE_ON_TONE: false,
+        ADD_GLARE: false,
+        TRANSPARENCY: 0,
       },
       bg_id: "",
     },
@@ -59,6 +62,25 @@ const filterSlice = createSlice({
     },
     setSelectedSampleImage(state, action: any) {
       state.sampleSelectedImage = action.payload;
+    },
+
+    setSelectedFile(state, action: any) {
+      state.selectedFile = action.payload;
+    },
+
+    removeAllFilter(state) {
+      state.filters = {
+        window_refinement: {
+          TINT_COLOR: "(166, 205, 203)",
+          TONE_ON_TONE: false,
+          ADD_GLARE: false,
+          TRANSPARENCY: 0,
+        },
+        bg_id: "",
+      };
+      state.backgroundName = "";
+      state.plateName = "";
+      state.sampleSelectedImage = "";
     },
   },
 });

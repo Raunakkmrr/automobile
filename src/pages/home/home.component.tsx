@@ -24,6 +24,7 @@ const Home = () => {
               {assets?.sample_images?.map((item: any) => (
                 <button
                   onClick={() => {
+                    dispatch(filterActions.removeAllFilter());
                     dispatch(filterActions.setSelectedSampleImage(item));
                     navigate("/backgrounds");
                   }}

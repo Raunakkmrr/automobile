@@ -12,9 +12,9 @@ const assetSlice = createSlice({
   name: "assets",
   initialState: {
     assets: {
-      backgrounds: {},
-      number_plates: {},
-      sample_images: {},
+      backgrounds: [],
+      number_plates: [],
+      sample_images: [],
     },
   } as AssetState,
   reducers: {
