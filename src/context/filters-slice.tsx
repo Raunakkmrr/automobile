@@ -64,7 +64,7 @@ const filterSlice = createSlice({
       state.sampleSelectedImage = action.payload;
     },
 
-    setSelectedFile(state, action: any) {
+    setSelectedFile(state, action: PayloadAction<any>) {
       state.selectedFile = action.payload;
     },
 
