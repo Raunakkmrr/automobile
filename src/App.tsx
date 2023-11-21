@@ -20,12 +20,12 @@ const App = () => {
   // This is a workaround to bypass CORS issues when the backend does not set the appropriate CORS headers.
   useEffect(() => {
     axios
-      .get("/api/automobile/background/assets", {
+      .get("https://api.carromm.com/automobile/background/assets", {
         headers: {
           Accept: "application/json",
           Authorization: "510700f6-15eb-4f37-8270-a856c6caf101",
         },
-        withCredentials: true,
+        // withCredentials: true,
       })
       .then((response) => {
         // Dispatching an action to update the state with the fetched assets data.

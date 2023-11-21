@@ -64,7 +64,7 @@ const FiltersPage = () => {
     else formData.append("extension", `.${mainFile}`);
     setisProcessing(true)
     axios
-      .post("/api/automobile/background/replace", formData, {
+      .post("https://api.carromm.com/automobile/background/replace", formData, {
         headers: {
           Accept: "application/json",
           "Content-Type": "multipart/form-data",
@@ -76,12 +76,13 @@ const FiltersPage = () => {
         setisProcessing(false)
         navigate(`/download/${response?.data?.sku_id}`);
       })
-      .catch(() =>
+      .catch(() =>{
+      setisProcessing(false)
         toast({
           description: "Not able to process image at this moment",
           variant: "destructive",
         })
-      );
+  });
   };
 
   if (!sampleSelectedImage && !selectedImage)

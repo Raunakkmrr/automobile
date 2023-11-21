@@ -14,7 +14,7 @@ const DownloadPage = () => {
 
   useEffect(() => {
     axios
-      .get("/api/automobile/background/replace", {
+      .get("https://api.carromm.com/automobile/background/replace", {
         params: {
           sku_id: params?.sku_id || "",
         },
