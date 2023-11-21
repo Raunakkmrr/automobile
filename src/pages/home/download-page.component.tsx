@@ -13,37 +13,46 @@ const DownloadPage = () => {
   const [outputUrl, setOutputUrl] = useState("");
 
   useEffect(() => {
-    axios
-      .get("https://api.carromm.com/automobile/background/replace", {
-        params: {
-          sku_id: params?.sku_id || "",
-        },
-        headers: {
-          Accept: "application/json",
-          Authorization: "510700f6-15eb-4f37-8270-a856c6caf101",
-        },
-      })
-      .then((response: any) => {
-        // handle success
-        if (response?.data?.input_url?.endsWith(".blob")) {
-          setInputUrl(response?.data?.input_url.slice(0, -5));
-        } else {
-          setInputUrl(response?.data?.input_url);
-        }
-        if (response?.data?.output_url?.endsWith(".blob")) {
-          setOutputUrl(response?.data?.output_url.slice(0, -5));
-        } else {
-          setOutputUrl(response?.data?.output_url);
-        }
-      })
-      .catch(() => {
-        // handle error
-        toast({
-          description: "Not able to fetch the image. Please try again",
-          variant: "destructive",
-        });
-      });
-  }, []);
+    const intervalId = setInterval(() => {
+      if (outputUrl) {
+        clearInterval(intervalId);
+      } else {
+        axios
+          .get("https://api.carromm.com/automobile/background/replace", {
+            params: {
+              sku_id: params?.sku_id || "",
+            },
+            headers: {
+              Accept: "application/json",
+              Authorization: "510700f6-15eb-4f37-8270-a856c6caf101",
+            },
+          })
+          .then((response: any) => {
+            // handle success
+            if (response?.data?.input_url?.endsWith(".blob")) {
+              setInputUrl(response?.data?.input_url.slice(0, -5));
+            } else {
+              setInputUrl(response?.data?.input_url);
+            }
+            if (response?.data?.output_url?.endsWith(".blob")) {
+              setOutputUrl(response?.data?.output_url.slice(0, -5));
+            } else {
+              setOutputUrl(response?.data?.output_url);
+            }
+          })
+          .catch(() => {
+            // handle error
+            toast({
+              description: "Not able to fetch the image. Please try again",
+              variant: "destructive",
+            });
+          });
+      }
+    }, 2500);
+    setTimeout(() => {
+      clearInterval(intervalId);
+    }, 60000);
+  }, [outputUrl]);
 
   const downloadImageHandler = () => {
     const link = document.createElement("a");
