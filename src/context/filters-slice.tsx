@@ -46,7 +46,7 @@ const filterSlice = createSlice({
       state.filters.number_plate = action.payload;
     },
 
-    setMainFile(state, action: any) {
+    setMainFile(state, action: PayloadAction<any>) {
       state.mainFile = action.payload;
     },
 

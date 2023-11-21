@@ -1,9 +1,10 @@
 import { AssetState } from "@/context/assets-slice";
 import { filterActions } from "@/context/filters-slice";
+import { RootState } from "@/context/store";
 import { useDispatch, useSelector } from "react-redux";
 
 const NumberPlate = () => {
-  const { assets } = useSelector((state: AssetState) => state.assets);
+  const { assets } = useSelector((state: RootState) => state.assets);
 
   const dispatch = useDispatch();
   return (
