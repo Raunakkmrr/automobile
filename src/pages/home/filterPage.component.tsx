@@ -8,6 +8,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import MagicWandIcon from "/src/assets/icons/magic-wand.svg";
+import { useState } from "react";
 
 const FiltersPage = () => {
   const {
@@ -22,17 +23,18 @@ const FiltersPage = () => {
   const location = useLocation();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [isProcessing, setisProcessing] = useState(false)
 
   const processImageHandler = () => {
     const formData = new FormData();
 
-    if (!plateName || !filters?.bg_id) {
-      toast({
-        description: "Please select a filter first",
-        variant: "destructive",
-      });
-      return;
-    }
+    // if (!plateName || !filters?.bg_id) {
+    //   toast({
+    //     description: "Please select a filter first",
+    //     variant: "destructive",
+    //   });
+    //   return;
+    // }
 
     if (!sampleSelectedImage) {
       const imageFile = selectedImage ? selectedFile : null;
@@ -60,7 +62,7 @@ const FiltersPage = () => {
         }`
       );
     else formData.append("extension", `.${mainFile}`);
-
+    setisProcessing(true)
     axios
       .post("/api/automobile/background/replace", formData, {
         headers: {
@@ -71,6 +73,7 @@ const FiltersPage = () => {
       })
       .then((response: any) => {
         toast({ description: "Successfully processed request" });
+        setisProcessing(false)
         navigate(`/download/${response?.data?.sku_id}`);
       })
       .catch(() =>
@@ -134,6 +137,7 @@ const FiltersPage = () => {
         </div>
 
         <Button
+        disabled={isProcessing}
           onClick={processImageHandler}
           className="flex items-center gap-1 bg-blue-600"
         >
