@@ -22,8 +22,8 @@ const filterSlice = createSlice({
     filters: {
       window_refinement: {
         TINT_COLOR: "(166, 205, 203)",
-        TONE_ON_TONE: false,
-        ADD_GLARE: false,
+        TONE_ON_TONE: "False",
+        ADD_GLARE: "False",
         TRANSPARENCY: 0,
       },
       bg_id: "",
@@ -72,8 +72,8 @@ const filterSlice = createSlice({
       state.filters = {
         window_refinement: {
           TINT_COLOR: "(166, 205, 203)",
-          TONE_ON_TONE: false,
-          ADD_GLARE: false,
+          TONE_ON_TONE: "False",
+          ADD_GLARE: "False",
           TRANSPARENCY: 0,
         },
         bg_id: "",

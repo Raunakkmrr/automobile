@@ -68,7 +68,7 @@ const Window = () => {
           onCheckedChange={(e) =>
             dispatch(
               filterActions.setWindowsFilter({
-                value: e,
+                value: e ? "True" : "False",
                 key: "ADD_GLARE",
               })
             )
