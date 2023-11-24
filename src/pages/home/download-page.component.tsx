@@ -4,8 +4,8 @@ import axios from "axios";
 import { DiamondIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import DownloadIcon from "/src/assets/icons/upload-file.svg";
 import loadingMp4 from "/src/assets/gif/loading.mp4";
+import DownloadIcon from "/src/assets/icons/upload-file.svg";
 
 const DownloadPage = () => {
   const params = useParams();
@@ -13,49 +13,56 @@ const DownloadPage = () => {
   const [inputUrl, setInputUrl] = useState("");
   const [outputUrl, setOutputUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [outputLoading, setOutputLoading] = useState(false);
+
+  const callApi = async () => {
+    setIsLoading(true);
+    setOutputLoading(true);
+    try {
+      const response = await axios.get(
+        "https://api.carromm.com/automobile/background/replace",
+        {
+          params: {
+            sku_id: params?.sku_id || "",
+          },
+          headers: {
+            Accept: "application/json",
+            Authorization: "510700f6-15eb-4f37-8270-a856c6caf101",
+          },
+        }
+      );
+
+      if (response?.status !== 200) throw new Error();
+
+      setIsLoading(false);
+      if (response?.data?.output_url) setOutputLoading(false);
+      if (response?.data?.input_url?.endsWith(".blob")) {
+        setInputUrl(response?.data?.input_url.slice(0, -5));
+      } else {
+        setInputUrl(response?.data?.input_url);
+      }
+      if (response?.data?.output_url?.endsWith(".blob")) {
+        setOutputUrl(response?.data?.output_url.slice(0, -5));
+      } else {
+        setOutputUrl(response?.data?.output_url);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      setOutputLoading(false);
+      toast({
+        description: "Not able to fetch the image. Please try again",
+        variant: "destructive",
+      });
+    }
+  };
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (outputUrl) {
-        clearInterval(intervalId);
-      } else {
-        setIsLoading(true);
-        axios
-          .get("https://api.carromm.com/automobile/background/replace", {
-            params: {
-              sku_id: params?.sku_id || "",
-            },
-            headers: {
-              Accept: "application/json",
-              Authorization: "510700f6-15eb-4f37-8270-a856c6caf101",
-            },
-          })
-          .then((response: any) => {
-            // handle success
-            setIsLoading(false);
-            if (response?.data?.input_url?.endsWith(".blob")) {
-              setInputUrl(response?.data?.input_url.slice(0, -5));
-            } else {
-              setInputUrl(response?.data?.input_url);
-            }
-            if (response?.data?.output_url?.endsWith(".blob")) {
-              setOutputUrl(response?.data?.output_url.slice(0, -5));
-            } else {
-              setOutputUrl(response?.data?.output_url);
-            }
-          })
-          .catch(() => {
-            // handle error
-            setIsLoading(false);
-            toast({
-              description: "Not able to fetch the image. Please try again",
-              variant: "destructive",
-            });
-          });
+    const interval = setInterval(() => {
+      if (!outputUrl) {
+        callApi();
       }
-    }, 2500);
-
-    return () => clearInterval(intervalId);
+    }, 1000);
+    return () => clearInterval(interval);
   }, [outputUrl]);
 
   const downloadImageHandler = () => {
@@ -98,7 +105,7 @@ const DownloadPage = () => {
           <div className="relative h-96 w-96">
             {!outputUrl && (
               <div className="flex items-center justify-center bg-gray-100 rounded-lg h-96 w-96">
-                {isLoading ? (
+                {outputLoading ? (
                   <video autoPlay loop muted className="h-96 w-96">
                     <source src={loadingMp4} type="video/mp4" />
                   </video>
