@@ -5,6 +5,7 @@ import { DiamondIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import DownloadIcon from "/src/assets/icons/upload-file.svg";
+import loadingMp4 from "/src/assets/gif/loading.mp4";
 
 const DownloadPage = () => {
   const params = useParams();
@@ -53,9 +54,8 @@ const DownloadPage = () => {
           });
       }
     }, 2500);
-    setTimeout(() => {
-      clearInterval(intervalId);
-    }, 60000);
+
+    return () => clearInterval(intervalId);
   }, [outputUrl]);
 
   const downloadImageHandler = () => {
@@ -71,16 +71,20 @@ const DownloadPage = () => {
     <section className="px-10 mt-20 ">
       <main className="flex justify-center">
         <div className="inline-flex items-center justify-center w-auto h-auto p-10 mx-auto border shadow-lg">
-          <div className="relative">
+          <div className="relativ h-96">
             {!inputUrl && (
               <div className="flex items-center justify-center bg-gray-100 rounded-lg h-96 w-96">
-                <p className="text-black">
-                  {isLoading ? "Image in progress" : "Image failed to process"}
-                </p>
+                {isLoading ? (
+                  <video autoPlay loop muted className="h-96 w-96">
+                    <source src={loadingMp4} type="video/mp4" />
+                  </video>
+                ) : (
+                  <p className="text-black">"Image failed to process"</p>
+                )}
               </div>
             )}
 
-            <img src={inputUrl} className="h-96" />
+            {inputUrl && <img src={inputUrl} className="h-96 w-96" />}
 
             <span className="absolute top-0 left-0 p-1 text-black bg-purple-200">
               Before
@@ -91,15 +95,19 @@ const DownloadPage = () => {
             <div className="bg-purple-600 h-[28rem] w-[2px]" />
             <DiamondIcon fill="purple" color="purple" />
           </div>
-          <div className="relative">
+          <div className="relative h-96">
             {!outputUrl && (
               <div className="flex items-center justify-center bg-gray-100 rounded-lg h-96 w-96">
-                <p className="text-black">
-                  {isLoading ? "Image in progress" : "Image failed to process"}
-                </p>
+                {isLoading ? (
+                  <video autoPlay loop muted className="h-96 w-96">
+                    <source src={loadingMp4} type="video/mp4" />
+                  </video>
+                ) : (
+                  <p className="text-black">"Image failed to process"</p>
+                )}
               </div>
             )}
-            {outputUrl && <img src={outputUrl} className="h-96" />}
+            {outputUrl && <img src={outputUrl} className="h-96 w-96" />}
             <span className="absolute top-0 left-0 p-1 text-black bg-purple-200">
               After
             </span>
