@@ -5,10 +5,10 @@ import BackgroundFilter from "@/features/filter-panel/background.component";
 import NumberPlate from "@/features/filter-panel/number-plate.component";
 import Window from "@/features/filter-panel/window.component";
 import axios from "axios";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import MagicWandIcon from "/src/assets/icons/magic-wand.svg";
-import { useState } from "react";
 
 const FiltersPage = () => {
   const {
@@ -67,7 +67,7 @@ const FiltersPage = () => {
     });
     setIsLoading(true);
     axios
-      .post("/api/automobile/background/replace", formData, {
+      .post("https://api.carromm.com/automobile/background/replace", formData, {
         headers: {
           Accept: "application/json",
           "Content-Type": "multipart/form-data",
@@ -77,10 +77,12 @@ const FiltersPage = () => {
       .then((response: any) => {
         setIsLoading(false);
         toast({ description: "Successfully processed request" });
+
         navigate(`/download/${response?.data?.sku_id}`);
       })
       .catch(() => {
         setIsLoading(false);
+
         toast({
           description: "Not able to process image at this moment",
           variant: "destructive",
