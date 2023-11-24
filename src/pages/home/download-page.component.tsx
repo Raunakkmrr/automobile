@@ -71,7 +71,7 @@ const DownloadPage = () => {
     <section className="px-10 mt-20 ">
       <main className="flex justify-center">
         <div className="inline-flex items-center justify-center w-auto h-auto p-10 mx-auto border shadow-lg">
-          <div className="relativ h-96">
+          <div className="relativ h-96 w-96">
             {!inputUrl && (
               <div className="flex items-center justify-center bg-gray-100 rounded-lg h-96 w-96">
                 {isLoading ? (
@@ -95,7 +95,7 @@ const DownloadPage = () => {
             <div className="bg-purple-600 h-[28rem] w-[2px]" />
             <DiamondIcon fill="purple" color="purple" />
           </div>
-          <div className="relative h-96">
+          <div className="relative h-96 w-96">
             {!outputUrl && (
               <div className="flex items-center justify-center bg-gray-100 rounded-lg h-96 w-96">
                 {isLoading ? (
