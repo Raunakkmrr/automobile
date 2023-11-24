@@ -11,8 +11,10 @@ const DownloadPage = () => {
   const { toast } = useToast();
   const [inputUrl, setInputUrl] = useState("");
   const [outputUrl, setOutputUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     axios
       .get("/api/automobile/background/replace", {
         params: {
@@ -25,6 +27,7 @@ const DownloadPage = () => {
       })
       .then((response: any) => {
         // handle success
+        setIsLoading(false);
         if (response?.data?.input_url?.endsWith(".blob")) {
           setInputUrl(response?.data?.input_url.slice(0, -5));
         } else {
@@ -38,6 +41,7 @@ const DownloadPage = () => {
       })
       .catch(() => {
         // handle error
+        setIsLoading(false);
         toast({
           description: "Not able to fetch the image. Please try again",
           variant: "destructive",
@@ -61,7 +65,9 @@ const DownloadPage = () => {
           <div className="relative">
             {!inputUrl && (
               <div className="flex items-center justify-center bg-gray-100 rounded-lg h-96 w-96">
-                <p className="text-black">No Input Image found</p>
+                <p className="text-black">
+                  {isLoading ? "Image in progress" : "Image failed to process"}
+                </p>
               </div>
             )}
 
@@ -79,7 +85,9 @@ const DownloadPage = () => {
           <div className="relative">
             {!outputUrl && (
               <div className="flex items-center justify-center bg-gray-100 rounded-lg h-96 w-96">
-                <p className="text-black">No Output Image found</p>
+                <p className="text-black">
+                  {isLoading ? "Image in progress" : "Image failed to process"}
+                </p>
               </div>
             )}
             {outputUrl && <img src={outputUrl} className="h-96" />}

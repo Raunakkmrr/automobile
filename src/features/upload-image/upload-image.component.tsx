@@ -1,3 +1,4 @@
+import { useToast } from "@/components/ui/use-toast";
 import { filterActions } from "@/context/filters-slice";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
@@ -8,10 +9,19 @@ import UploadFileIcon from "/src/assets/icons/upload-file.svg";
 const UploadImage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const onDrop = useCallback((acceptedFiles: File[]) => {
     // Do something with the files
 
     localStorage.mainFile = acceptedFiles[0];
+
+    if (acceptedFiles[0].size / 1024 / 1024 > 5) {
+      toast({
+        description: "File size exceeds 5MB. Please upload a smaller file.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     dispatch(filterActions.setMainFile(acceptedFiles[0]?.type?.split("/")[1]));
     dispatch(

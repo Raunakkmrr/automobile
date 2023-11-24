@@ -8,6 +8,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import MagicWandIcon from "/src/assets/icons/magic-wand.svg";
+import { useState } from "react";
 
 const FiltersPage = () => {
   const {
@@ -22,13 +23,14 @@ const FiltersPage = () => {
   const location = useLocation();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const processImageHandler = () => {
     const formData = new FormData();
 
-    if (!plateName || !filters?.bg_id) {
+    if (!filters?.bg_id) {
       toast({
-        description: "Please select a filter first",
+        description: "Please select a background first",
         variant: "destructive",
       });
       return;
@@ -60,7 +62,10 @@ const FiltersPage = () => {
         }`
       );
     else formData.append("extension", `.${mainFile}`);
-
+    toast({
+      description: "Uploading image...",
+    });
+    setIsLoading(true);
     axios
       .post("/api/automobile/background/replace", formData, {
         headers: {
@@ -70,15 +75,17 @@ const FiltersPage = () => {
         },
       })
       .then((response: any) => {
+        setIsLoading(false);
         toast({ description: "Successfully processed request" });
         navigate(`/download/${response?.data?.sku_id}`);
       })
-      .catch(() =>
+      .catch(() => {
+        setIsLoading(false);
         toast({
           description: "Not able to process image at this moment",
           variant: "destructive",
-        })
-      );
+        });
+      });
   };
 
   if (!sampleSelectedImage && !selectedImage)
@@ -136,8 +143,10 @@ const FiltersPage = () => {
         <Button
           onClick={processImageHandler}
           className="flex items-center gap-1 bg-blue-600"
+          disabled={isLoading}
         >
-          <img src={MagicWandIcon} alt="magic wand" /> Process Image
+          <img src={MagicWandIcon} alt="magic wand" />{" "}
+          {isLoading ? "Processing..." : "Process Image"}
         </Button>
       </main>
     </section>
