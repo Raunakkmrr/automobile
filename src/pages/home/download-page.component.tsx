@@ -75,14 +75,14 @@ const DownloadPage = () => {
   };
 
   return (
-    <section className="px-10 mt-20 ">
+    <section className="px-10 mt-10 ">
       <main className="flex justify-center">
         <div className="inline-flex items-center justify-center w-auto h-auto p-10 mx-auto border shadow-lg">
-          <div className="relativ h-96 w-96">
+          <div className="relative h-[34rem] w-[34rem]">
             {!inputUrl && (
-              <div className="flex items-center justify-center bg-gray-100 rounded-lg h-96 w-96">
+              <div className="flex items-center justify-center bg-gray-100 rounded-lg h-[34rem] w-[34rem]">
                 {isLoading ? (
-                  <video autoPlay loop muted className="h-96 w-96">
+                  <video autoPlay loop muted className="h-[34rem] w-[34rem]">
                     <source src={loadingMp4} type="video/mp4" />
                   </video>
                 ) : (
@@ -91,7 +91,12 @@ const DownloadPage = () => {
               </div>
             )}
 
-            {inputUrl && <img src={inputUrl} className="h-96 w-96" />}
+            {inputUrl && (
+              <img
+                src={inputUrl}
+                className="object-contain h-[34rem] w-[34rem]"
+              />
+            )}
 
             <span className="absolute top-0 left-0 p-1 text-black bg-purple-200">
               Before
@@ -102,11 +107,11 @@ const DownloadPage = () => {
             <div className="bg-purple-600 h-[28rem] w-[2px]" />
             <DiamondIcon fill="purple" color="purple" />
           </div>
-          <div className="relative h-96 w-96">
+          <div className="relative h-[34rem] w-[34rem]">
             {!outputUrl && (
-              <div className="flex items-center justify-center bg-gray-100 rounded-lg h-96 w-96">
+              <div className="flex items-center justify-center bg-gray-100 rounded-lg h-[34rem] w-[34rem]">
                 {outputLoading ? (
-                  <video autoPlay loop muted className="h-96 w-96">
+                  <video autoPlay loop muted className="h-[34rem] w-[34rem]">
                     <source src={loadingMp4} type="video/mp4" />
                   </video>
                 ) : (
@@ -114,7 +119,12 @@ const DownloadPage = () => {
                 )}
               </div>
             )}
-            {outputUrl && <img src={outputUrl} className="h-96 w-96" />}
+            {outputUrl && (
+              <img
+                src={outputUrl}
+                className="object-contain h-[34rem] w-[34rem]"
+              />
+            )}
             <span className="absolute top-0 left-0 p-1 text-black bg-purple-200">
               After
             </span>
